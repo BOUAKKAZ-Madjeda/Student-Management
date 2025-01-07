@@ -39,7 +39,9 @@ And the final file will be as the `Listes_etudiants.txt` in the repository.
 #### Problems Encountred
 -Inserting the student at the correct position:
 For an unordered file, we could have simply opened the file in append mode to add the new student directly. However, maintaining the order required a more sophisticated approach.
+
  . Using fseek was attempted, but it caused unintentional changes to the data, as file I/O does not support direct insertion without overwriting.
+ 
  . Using an array to store all students and reorder them in memory was another option. However, since the dataset may grow large, relying on main memory could be infeasible. While working with secondary memory is slower, it was deemed more efficient in our case.
  . Our final solution was to use a temporary file.
  
