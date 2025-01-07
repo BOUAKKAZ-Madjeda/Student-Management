@@ -24,7 +24,7 @@ Exemple :
 And the final file will be as the `Listes_etudiants.txt` in the repository.
 
 ## II. Functions
-### 1. Add Student (***Lisa BENTALEB***)
+### 1. Add Student (***BENTALEB lisa***)
 - Validates inputs:
   - Ensures the ID is unique using the `unique_id` function.
   - Confirms the year of birth (`1990-2020`) and correct group format (e.g., `1A`).
@@ -43,7 +43,7 @@ For an unordered file, we could have simply opened the file in append mode to ad
  . Using an array to store all students and reorder them in memory was another option. However, since the dataset may grow large, relying on main memory could be infeasible. While working with secondary memory is slower, it was deemed more efficient in our case.
  . Our final solution was to use a temporary file.
  
-### 2. Search Student by ID
+### 2. Search Student by ID (***BOUDISSA Farouk Radouane***)
 The `search_student_by_id` function retrieves and displays detailed information about a student based on their unique ID from a data file.
 #### Instructions:
 1. **Prompt the user** to enter the ID of the student whose information is to be searched.
@@ -61,7 +61,7 @@ The `search_student_by_id` function retrieves and displays detailed information 
    - **Prints their detailed information to the console.**
 - If the student is not found or the file cannot be opened:
    - **Displays an appropriate error message.**
-### 3. Modification
+### 3. Modification (***ACHEUK Djida & TAYEBCHERIF Yasmine***)
 This documentation explains how to implement the student information modification procedure, along with encountered problems and instructions for use.
 
 #### Procedure Description
@@ -96,7 +96,7 @@ This function allows modifying student information as requested by the user. The
 - **Testing Conditions**: Address minor mistakes in test conditions.
 
 
-### 4. Logical Deletion
+### 4. Logical Deletion (***DOKKAR Chaima***)
 The `logicaldeletion` function updates a student's record in a text file by marking their `exist` field as `1`, indicating the record is logically deleted while keeping the data intact.
 
 **Process:**
@@ -110,7 +110,7 @@ The `logicaldeletion` function updates a student's record in a text file by mark
 
 **Challenge Faced:**  
 Directly modifying the file caused unintended changes to the data (e.g., altering the id field). This happened due to mismatches in line lengths after modifications, leading to corruption in the file's structure. The solution was to use a temporary file for updates, ensuring the changes were applied accurately without affecting the original file's data integrity.
-### 5. Extract and Sort
+### 5. Extract and Sort  (***TACHEKORT Celine***)
 This function extracts all students from a specified group (e.g., "1A") from the file, sorts them by their average grade in descending order, and displays the sorted list.
 
 #### instructions
@@ -133,7 +133,7 @@ This function extracts all students from a specified group (e.g., "1A") from the
 
 2.The strcmp function is case-sensitive. If the group in the file is "1a" but the user inputs "1A", no match will occur.
 
-### 6. Physical Deletion
+### 6. Physical Deletion (***BOUAKKAZ Madjeda***)
 This process removes students marked as logically deleted (exist != 0) by creating a temporary file that includes only active students (exist == 0). The temporary file replaces the original file.
 
 #### Steps:
