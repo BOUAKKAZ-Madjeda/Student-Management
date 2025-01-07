@@ -24,7 +24,7 @@ Exemple :
 And the final file will be as the `Listes_etudiants.txt` in the repository.
 
 ## II. Functions
-### 1. Add Student (***BENTALEB lisa***)
+### 1. Add Student (***BENTALEB Lisa***)
 - Validates inputs:
   - Ensures the ID is unique using the `unique_id` function.
   - Confirms the year of birth (`1990-2020`) and correct group format (e.g., `1A`).
