@@ -8,22 +8,23 @@ typedef struct student {
   char surname[30];
   int birth_year;
   char group[3];
-  float note[4];
-  float moyenne;
-  int exist; // Flag to indicate if student is active (0) or inactive (1)
+  float note[4]; // Array to store grades for 4 subjects
+  float moyenne; // Average grade
+  int exist; // Flag to indicate if student is active (1) or inactive (0)
 } student;
 
-void add_student(); // BENTALEB Lisa
-void search_student_by_id(const char *filename, int searchid); // BOUDISSA Farouk Radouane
-void modification(const char *f, const char *ftemp); // TAYEBCHERIF Yasmine , ACHEUK Djida
-void extract_and_sort( const char *filename ,char grp[3]); // TACHEKORT Celine
-void logicaldeletion(const char *filename, int target_id); // DOKKAR Chaima
-void Physical_Deletion(const char *filename, const char *Temp_file_name); // BOUAKKAZ Madjeda
+void add_student();
+void search_student_by_id(const char *filename, int searchid);
+void modification(const char *f, const char *ftemp);
+void extract_and_sort( const char *filename ,char grp[3]);
+void logicaldeletion(const char *filename, int target_id);
+void Physical_Deletion(const char *filename, const char *Temp_file_name);
 void display_students(const char *filename);
 
-int main(){
+int main()
+{
     int choice;
-    char filename[100] = "Students_List.txt"; // Example filename
+    char filename[100] = "Listes_Etudiants.txt"; // Example filename
     char temp_filename[100] = "temp.txt"; // Temporary file for deletions
     int id;
     char group[2];
@@ -55,7 +56,7 @@ int main(){
                 search_student_by_id(filename, id);
                 break;
             case 3:
-                modification(filename,temp_filename);
+                modification("Listes_Etudiants.txt","temp.txt");
                 break;
             case 4:
                 printf("\tEnter the group to extract and sort (e.g., 1A): ");
@@ -87,7 +88,6 @@ int main(){
     return 0;
 }
 
-// Function for Id check
 int unique_id(int id) {
     FILE *f = fopen("Listes_Etudiants.txt", "r");
     if (f == NULL) {
@@ -95,7 +95,7 @@ int unique_id(int id) {
     }
 
     int existing_id;
-    while (fscanf(f, "%d", &existing_id) == 1) { // We put our first integer of each line in the variable existing_id and we check it with the ID that the user input.
+    while (fscanf(f, "%d", &existing_id) == 1) {
         if (existing_id == id) {
             fclose(f);
             return 0; // ID is not unique
@@ -221,40 +221,24 @@ void add_student() {
     // Replace the original file with the temp file
     if (remove("Listes_Etudiants.txt") != 0 || rename("temp.txt", "Listes_Etudiants.txt") != 0) {
         perror("Error replacing file");
-        return ;
+        return;
     }
 
     printf("Student added successfully.\n");
 }
-
-void modification(const char *filename, const char *temp_filename) {
-
-    // Load existing IDs
-    FILE *f = fopen(filename, "r");
-    if (f == NULL) {
-        perror("Error opening the file");
-        return;
-    }
-
-    int t[100], i = 0;
-    char line[256]; // Buffer for reading lines
-
-    while (fgets(line, sizeof(line), f)) {
-        int id;
-        if (sscanf(line, "%d", &id) == 1) { // Read the ID from the line
-            t[i++] = id;
-        }
-    }
-    fclose(f);
-
-    int fid, choice, exist = 0;
+void modification(const char *filename, const char *temp_filename)
+ {
+    char line[256];
+    int fid, choice, nb, i, exist;
+    char module[20];
+    exist=0;
     printf("Enter the ID of the student you want to modify: ");
     scanf("%d", &fid);
 
     // Open the original file for reading
-    f = fopen(filename, "r");
+    FILE *f = fopen(filename, "r");
     if (!f) {
-        perror("Error reopening the file");
+        perror("Error opening the file");
         return;
     }
 
@@ -266,13 +250,12 @@ void modification(const char *filename, const char *temp_filename) {
         return;
     }
 
-    // Process each record
     while (fgets(line, sizeof(line), f)) {
-        int id, year, is_active;
+        int id, ID, year, is_active, is_unique;
         char fname[30], name[30], group[3];
-        float sfsd = 0, poo = 0, ana = 0, alg = 0, avg = 0;
+        float sfsd, poo, alg, ana, avg;
 
-        // Parse the record
+        // Parse the student record
         if (sscanf(line, "%d %s %s %d %s %f 4 %f 3 %f 2 %f 5 %f %d",
                    &id, fname, name, &year, group, &sfsd, &poo, &ana, &alg, &avg, &is_active) < 11) {
             fprintf(ftemp, "%s", line); // Copy the line if parsing fails
@@ -280,7 +263,7 @@ void modification(const char *filename, const char *temp_filename) {
         }
 
         if (id == fid) {
-            exist = 1;
+                exist=1;
             printf("\nModification Menu:\n");
             printf("1. Modify ID\n");
             printf("2. Modify Name\n");
@@ -288,26 +271,14 @@ void modification(const char *filename, const char *temp_filename) {
             printf("4. Modify Year of Birth\n");
             printf("5. Modify Group\n");
             printf("6. Modify Status\n");
-            printf("7. Modify Grades (recalculate average)\n");
+            printf("7. Modify Grades (implies recalculating average)\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
 
             switch (choice) {
                 case 1:
-                    printf("Enter new unique ID: ");
-                    int new_id, is_unique;
-                    do {
-                        is_unique = 1;
-                        scanf("%d", &new_id);
-                        for (int j = 0; j < i; j++) {
-                            if (new_id == t[j]) {
-                                is_unique = 0;
-                                printf("ID already exists. Please try again: ");
-                                break;
-                            }
-                        }
-                    } while (!is_unique);
-                    id = new_id;
+                  printf("Enter new ID: ");
+                    scanf("%d", &id);
                     break;
                 case 2:
                     printf("Enter new Name: ");
@@ -322,15 +293,16 @@ void modification(const char *filename, const char *temp_filename) {
                     do {
                         scanf("%d", &year);
                         if (year < 1990 || year > 2020)
-                            printf("Invalid Input, must be between 1990 and 2020. Try again: ");
-                    } while (year < 1990 || year > 2020);
+                            printf("Invalid Input, please try again, the year must be between 1990 and 2020 : ");
+                      } while (year < 1990 || year > 2020);
+
                     break;
                 case 5:
-                    printf("Enter new Group (e.g., 1A, 2B): ");
+                    printf("Enter new Group: ");
                     do {
                         scanf("%s", group);
                         if (!(group[0] >= '1' && group[0] <= '3' && group[1] >= 'A' && group[1] <= 'C' && group[2] == '\0')) {
-                            printf("Invalid Group. Try again (e.g., 1A, 2C): ");
+                            printf("Invalid Group, try again (e.g., 1A, 2C): ");
                         }
                     } while (!(group[0] >= '1' && group[0] <= '3' && group[1] >= 'A' && group[1] <= 'C' && group[2] == '\0'));
                     break;
@@ -339,15 +311,35 @@ void modification(const char *filename, const char *temp_filename) {
                     scanf("%d", &is_active);
                     break;
                 case 7:
-                    printf("Enter new grades (0-20):\n");
+                    printf("Enter grades for modules:\n");
                     printf("\tSFSD: ");
-                    scanf("%f", &sfsd);
+                    do {
+                        scanf("%f", &sfsd);
+                        if (sfsd < 0 || sfsd > 20)
+                            printf("Invalid Input, please try again: ");
+                    } while (sfsd < 0 || sfsd > 20);
+
                     printf("\tPOO: ");
-                    scanf("%f", &poo);
+                    do {
+                        scanf("%f", &poo);
+                        if (poo < 0 || poo > 20)
+                            printf("Invalid Input, please try again: ");
+                    } while (poo < 0 || poo > 20);
+
                     printf("\tAnalyse: ");
-                    scanf("%f", &ana);
+                    do {
+                        scanf("%f", &ana);
+                        if (ana < 0 || ana > 20)
+                            printf("Invalid Input, please try again: ");
+                    } while (ana < 0 || ana > 20);
+
                     printf("\tAlgebra: ");
-                    scanf("%f", &alg);
+                    do {
+                        scanf("%f", &alg);
+                        if (alg < 0 || alg > 20)
+                            printf("Invalid Input, please try again: ");
+                    } while (alg < 0 || alg > 20);
+
                     avg = (sfsd * 4 + poo * 3 + ana * 2 + alg * 5) / 14.0;
                     break;
                 default:
@@ -355,7 +347,7 @@ void modification(const char *filename, const char *temp_filename) {
             }
         }
 
-        // Write the record back to the temporary file
+        // Write the (modified or unmodified) record to the temporary file
         fprintf(ftemp, "%d %s %s %d %s %.2f 4 %.2f 3 %.2f 2 %.2f 5 %.2f %d\n",
                 id, fname, name, year, group, sfsd, poo, ana, alg, avg, is_active);
     }
@@ -363,14 +355,18 @@ void modification(const char *filename, const char *temp_filename) {
     fclose(f);
     fclose(ftemp);
 
-    // Replace original file with the temporary file
+    // Replace the original file with the temporary file
     if (remove(filename) != 0 || rename(temp_filename, filename) != 0) {
         perror("Error replacing file");
-    } else {
-        printf(exist ? "Modification completed successfully.\n" : "ID not found. No modifications made.\n");
+        return;
+    }
+    if(exist==1){
+    printf("Modification completed successfully.\n");
+    }
+    else{
+        printf("id doesn't exist , modification not allowed ");
     }
 }
-
 void search_student_by_id(const char *filename, int searchid) {
   FILE *f = fopen(filename, "r");
   if (f == NULL) {
@@ -521,7 +517,7 @@ void logicaldeletion(const char *filename, int target_id) {
 }
 
 void Physical_Deletion( const char *filename, const char *Temp_file_name) {
-    //Open the original file for reading
+    // Use fopen_read to open the original file for reading
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         return;
@@ -573,10 +569,11 @@ void Physical_Deletion( const char *filename, const char *Temp_file_name) {
     // These lines to replace the original file with the temporary file
     remove(filename);
     rename(Temp_file_name, filename);
-    printf("\nStudents deleted successfully.\n");
+    printf("Students deleted successfully.");
 }
 
-void display_students(const char *filename){
+void display_students(const char *filename)
+{
     FILE *f = fopen(filename, "r");
     if (f == NULL) {
     perror("Error opening file");
@@ -590,7 +587,7 @@ void display_students(const char *filename){
     if (sscanf(line, "%d %s %s %d %s %f 4 %f 3 %f 2 %f 5 %f %d",
               &s.id, s.name, s.surname, &s.birth_year, s.group,
               &s.note[0], &s.note[1], &s.note[2], &s.note[3], &s.moyenne, &s.exist) == 11) {
-        printf("ID: %d | Name: %s %s | Birth Year: %d | Group: %s | Average: %.2f | Active : %d\n", s.id, s.name, s.surname, s.birth_year,  s.group, s.moyenne, s.exist);
+        printf("ID: %2d | Name: %s %s | Birth Year: %d | Group: %s | Average: %.2f | Active : %d\n", s.id, s.name, s.surname, s.birth_year,  s.group, s.moyenne, s.exist);
       }
     }
 }
