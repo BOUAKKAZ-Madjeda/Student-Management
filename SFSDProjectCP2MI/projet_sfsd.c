@@ -55,7 +55,7 @@ int main(){
                 search_student_by_id(filename, id);
                 break;
             case 3:
-                modification("Listes_Etudiants.txt","temp.txt");
+                modification(filename,temp_filename);
                 break;
             case 4:
                 printf("\tEnter the group to extract and sort (e.g., 1A): ");
